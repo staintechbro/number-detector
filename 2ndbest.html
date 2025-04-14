@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Type Detector</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.9.1/dist/cdn.min.js" defer></script>
+</head>
+<body>
+   <div class="container mx-auto lg:grid lg:place-items-center lg:h-screen md:grid md:place-items-center md:h-screen ">
+    <div class="overflow-x-hidden bg-gray-50 text-gray-800" >
+      <header class="bg-blue-600 text-white shadow-md rounded-md font-bold">
+        <div class="container mx-auto  px-4 py-3 " >
+          <!-- <nav class="flex space-x-4d text-sm font-medium "> -->
+            <nav class="grid grid-cols-2 space-x-4d text-sm  sm:grid-cols-3 md:grid-cols-4 lg:grid-5 gap-1 ">
+            <a href="#" id="absolute" class="hover:bg-blue-700 px-3 py-2 rounded">Absolute Number</a>
+            <a href="#" id="natural" class="hover:bg-blue-700 px-3 py-2 rounded">Natural Number</a>
+            <a href="#" id="integer" class="hover:bg-blue-700 px-3 py-2 rounded">Integer</a>
+            <a href="#" id="non-integer" class="hover:bg-blue-700 px-3 py-2 rounded">Non-Integer</a>
+            <a href="#" id="rational" class="hover:bg-blue-700 px-3 py-2 rounded">Rational</a>
+            <a href="#" id="irrational" class="hover:bg-blue-700 px-3 py-2 rounded">Irrational</a>
+            <a href="#" id="odd" class="hover:bg-blue-700 px-3 py-2 rounded">Odd</a>
+            <a href="#" id="even" class="hover:bg-blue-700 px-3 py-2 rounded">Even</a>
+            <a href="#" id="real" class="hover:bg-blue-700 px-3 py-2 rounded">Real</a>
+            <a href="#" id="whole" class="hover:bg-blue-700 px-3 py-2 rounded">Whole</a>
+            <a href="#" id="prime" class="hover:bg-blue-700 px-3 py-2 rounded">Prime</a>
+          </nav>
+        </div>
+      </header>
+      
+      <main class="container mx-auto px-4 py-10" x-data="{ number: '', result: '', highlight: '' }">
+        <div class="bg-white shadow-md rounded-lg p-6">
+          <h1 class="text-2xl font-bold mb-4">Number Type Detector</h1>
+    
+          <div class="mb-4">
+            <label for="numberInput" class="block text-sm font-medium text-gray-700">Enter a number:</label>
+            <input 
+              type="number" 
+              id="numberInput" 
+              placeholder="Enter a number"
+              x-model="number"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+    
+          <button 
+            @click="checkNumberType()" 
+            class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >Check Number</button>
+    
+          <div class="mt-6 ">
+            <h2 class="text-lg font-semibold ">Result:</h2>
+            <pre x-text="result" class="overflow-x-auto bg-gray-100 p-4 rounded text-gray-800 mt-2"></pre>
+          </div>
+        </div>
+     </div>
+    </main>
+  
+    </div>
+   </div>
+  <script>
+    function highlightCategories(ids) {
+      document.querySelectorAll('nav a').forEach(link => {
+        link.classList.remove('bg-blue-700', 'text-white');
+        if (ids.includes(link.id)) {
+          link.classList.add('bg-blue-700', 'text-white');
+        }
+      });
+    }
+
+    function detectNumberType(num) {
+      let result = '';
+      let highlights = [];
+
+      // Absolute number
+      if (Math.abs(num) === num) {
+        result += 'Absolute number: A number without regard to its sign.\n';
+        highlights.push('absolute');
+      }
+
+      // Natural number
+      if (Number.isInteger(num) && num >= 1) {
+        result += 'Natural number: A positive integer.\n';
+        highlights.push('natural');
+      }
+
+      // Integer
+      if (Number.isInteger(num)) {
+        result += 'Integer: A whole number, positive, negative, or zero.\n';
+        highlights.push('integer');
+      }
+
+      // Non-integer
+      if (!Number.isInteger(num)) {
+        result += 'Non-integer: Not a whole number.\n';
+        highlights.push('non-integer');
+      }
+
+      // Rational number
+      if (Number.isFinite(num)) {
+        result += 'Rational number: Can be expressed as a ratio of two integers.\n';
+        highlights.push('rational');
+      }
+
+      // Irrational number
+      if (!Number.isInteger(num) && !Number.isFinite(num)) {
+        result += 'Irrational number: Cannot be expressed as a simple fraction.\n';
+        highlights.push('irrational');
+      }
+
+      // Odd number
+      if (Number.isInteger(num) && num % 2 !== 0) {
+        result += 'Odd number: Not divisible by 2.\n';
+        highlights.push('odd');
+      }
+
+      // Even number
+      if (Number.isInteger(num) && num % 2 === 0) {
+        result += 'Even number: Divisible by 2.\n';
+        highlights.push('even');
+      }
+
+      // Real number
+      if (typeof num === 'number' && !isNaN(num)) {
+        result += 'Real number: Exists on the number line.\n';
+        highlights.push('real');
+      }
+
+      // Whole number
+      if (Number.isInteger(num) && num >= 0) {
+        result += 'Whole number: A non-negative integer.\n';
+        highlights.push('whole');
+      }
+
+      // Prime number
+      if (Number.isInteger(num) && num > 1) {
+        let isPrime = true;
+        for (let i = 2; i <= Math.sqrt(num); i++) {
+          if (num % i === 0) {
+            isPrime = false;
+            break;
+          }
+        }
+        if (isPrime) {
+          result += 'Prime number: Divisible only by 1 and itself.\n';
+          highlights.push('prime');
+        }
+      }
+
+      if (result === '') {
+        result = 'No matching category for this number.';
+        highlights = [];
+      }
+
+      highlightCategories(highlights);
+      return result;
+    }
+
+    function checkNumberType() {
+      const numberInput = document.querySelector('[x-model="number"]').value;
+      const number = parseFloat(numberInput);
+
+      if (isNaN(number)) {
+        document.querySelector('[x-text="result"]').textContent = 'Please enter a valid number.';
+        highlightCategories([]);
+      } else {
+        const result = detectNumberType(number);
+        document.querySelector('[x-text="result"]').textContent = result;
+      }
+    }
+
+    document.querySelector('[x-model="number"]').addEventListener('input', function() {
+      if (this.value.trim() === '') {
+        document.querySelector('[x-text="result"]').textContent = '';
+        highlightCategories([]); // Clear all highlighted categories
+      }
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+  <script>
+    function highlightCategories(ids) {
+      document.querySelectorAll('nav a').forEach(link => {
+        link.classList.remove('bg-blue-700', 'text-white');
+        if (link.id === id) {
+          link.classList.add('bg-blue-700', 'text-white');
+        }
+      });
+    }
+
+    function detectNumberType(num) {
+      let result = '';
+      let highlight = [];
+
+      // Absolute number
+      if (Math.abs(num) === num) {
+        result += 'Absolute number: A number without regard to its sign.\n';
+        highlights.push('absolute');
+      }
+
+      // Natural number
+      if (Number.isInteger(num) && num >= 1) {
+        result += 'Natural number: A positive integer.\n';
+        highlights.push('natural');
+      }
+
+      // Integer
+      if (Number.isInteger(num)) {
+        result += 'Integer: A whole number, positive, negative, or zero.\n';
+        highlights.push('integer');
+      }
+
+      // Non-integer
+      if (!Number.isInteger(num)) {
+        result += 'Non-integer: Not a whole number.\n';
+        highlights.push('non-integer');
+      }
+
+      // Rational number
+      if (Number.isFinite(num)) {
+        result += 'Rational number: Can be expressed as a ratio of two integers.\n';
+        highlights.push('rational');
+      }
+
+      // Irrational number
+      if (!Number.isInteger(num) && !Number.isFinite(num)) {
+        result += 'Irrational number: Cannot be expressed as a simple fraction.\n';
+        highlights.push('irrational');
+      }
+
+      // Odd number
+      if (Number.isInteger(num) && num % 2 !== 0) {
+        result += 'Odd number: Not divisible by 2.\n';
+        highlights.push('odd');
+      }
+
+      // Even number
+      if (Number.isInteger(num) && num % 2 === 0) {
+        result += 'Even number: Divisible by 2.\n';
+        highlights.push('even');
+      }
+
+      // Real number
+      if (typeof num === 'number' && !isNaN(num)) {
+        result += 'Real number: Exists on the number line.\n';
+        highlights.push('real');
+      }
+
+      // Whole number
+      if (Number.isInteger(num) && num >= 0) {
+        result += 'Whole number: A non-negative integer.\n';
+        highlights.push('whole');
+      }
+
+      // Prime number
+      if (Number.isInteger(num) && num > 1) {
+        let isPrime = true;
+        for (let i = 2; i <= Math.sqrt(num); i++) {
+          if (num % i === 0) {
+            isPrime = false;
+            break;
+          }
+        }
+        if (isPrime) {
+          result += 'Prime number: Divisible only by 1 and itself.\n';
+          highlights.push('prime');
+        }
+      }
+
+      if (result === '') {
+        result = 'No matching category for this number.';
+        highlights = [];
+      }
+
+      highlightCategories(highlights);
+      return result;
+    }
+
+    function checkNumberType() {
+      const numberInput = document.querySelector('[x-model="number"]').value;
+      const number = parseFloat(numberInput);
+
+      if (isNaN(number)) {
+        document.querySelector('[x-text="result"]').textContent = 'Please enter a valid number.';
+        highlightCategories([]);
+      } else {
+        const result = detectNumberType(number);
+        document.querySelector('[x-text="result"]').textContent = result;
+      }
+    }
+    
+      document.querySelector('[x-model="number"]').addEventListener('input', function() {
+        if (this.value.trim() === '') {
+          document.querySelector('[x-text="result"]').textContent = '';
+        }
+      });// clear display
+      
+      
+    document.getElementById('[x-text="result"]').textContent = result;
+      
+    
+
+      document.getElementById('[x-model="number"]').addEventListener("input", function() {
+        if (this.value.trim() === "") {
+          document.getElementById('[x-text="result"]').textContent = "";
+          highlightCategories([]); // Clear all highlighted categories
+        }
+      });
+    
+  </script> -->
+</body>
+</html>
